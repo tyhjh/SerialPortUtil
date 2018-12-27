@@ -1,4 +1,4 @@
-package com.example.serialportlibrary.service.impl;
+package com.serialportlibrary.service.impl;
 
 import java.io.IOException;
 

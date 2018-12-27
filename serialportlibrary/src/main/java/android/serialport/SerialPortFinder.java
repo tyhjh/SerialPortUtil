@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.serialportlibrary.base;
+package android.serialport;
 
 import java.io.File;
 import java.io.FileReader;
@@ -49,7 +49,7 @@ public class SerialPortFinder {
      *
      * @return
      */
-    public String[] getAllDevices() {
+    public String[] getDevices() {
         Vector<String> devices = new Vector<String>();
         Iterator<Driver> itdriv;
         try {
@@ -74,7 +74,7 @@ public class SerialPortFinder {
      *
      * @return
      */
-    public String[] getAllDevicesPath() {
+    public String[] getDevicesPaths() {
         Vector<String> devices = new Vector<String>();
         Iterator<Driver> itdriv;
         try {

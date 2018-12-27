@@ -1,4 +1,4 @@
-package com.example.serialportlibrary.util;
+package com.serialportlibrary.util;
 
 import java.util.Arrays;
 

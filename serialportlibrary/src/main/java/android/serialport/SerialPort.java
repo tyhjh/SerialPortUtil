@@ -1,4 +1,4 @@
-package com.example.serialportlibrary.base;
+package android.serialport;
 
 import android.util.Log;
 

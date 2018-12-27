@@ -1,4 +1,4 @@
-package com.example.serialportlibrary.service;
+package com.serialportlibrary.service;
 
 /**
  * @author HanPei
@@ -8,13 +8,15 @@ public interface ISerialPortService {
 
     /**
      * 发送byteArray数据
+     *
      * @param data
      * @return
      */
     byte[] sendData(byte[] data);
 
     /**
-     * 发送数据
+     * 发送十六进制的字符串数据
+     *
      * @param data
      * @return
      */

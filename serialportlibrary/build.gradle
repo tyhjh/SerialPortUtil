@@ -11,8 +11,16 @@ android {
 
     }
 
+    /*packagingOptions {
+        pickFirst 'lib/x86_64/libserial_port.so'
+        pickFirst 'lib/armeabi/libserial_port.so'
+        pickFirst 'lib/x86/libserial_port.so'
+        pickFirst 'lib/armeabi-v7a/libserial_port.so'
+        pickFirst 'lib/arm64-v8a/libserial_port.so'
+    }*/
 
-  /*  externalNativeBuild {
+
+    /*externalNativeBuild {
 
         // Encapsulates your CMake build configurations.
         ndkBuild {
