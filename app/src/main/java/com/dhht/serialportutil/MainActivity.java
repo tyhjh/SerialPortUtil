@@ -25,44 +25,32 @@ public class MainActivity extends AppCompatActivity {
 
         tv_hello = (TextView) findViewById(R.id.tv_hello);
 
+        //获取所有串口名字
         String[] devices = new SerialPortFinder().getDevices();
+        //获取所用串口地址
         String[] devicesPath = new SerialPortFinder().getDevicesPaths();
 
+
         for (String path : devicesPath) {
-            //Log.e("MainActivity：", path);
+            Log.e("MainActivity：", path);
         }
         for (String device : devices) {
-            //Log.e("MainActivity：", device);
+            Log.e("MainActivity：", device);
         }
         tv_hello.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //开门指令
-                        SerialPortService serialPortService = new SerialPortBuilder()
-                                .setTimeOut(100L)
-                                .setBaudrate(9600)
-                                .setDevicePath("dev/ttyS4")
-                                .createService();
-                        //发送指令
-                        byte[] receiveData = serialPortService.sendData("55AA0101010002");
-                        Log.e("MainActivity：", ByteStringUtil.byteArrayToHexStr(receiveData));
-                    }
-                }).start();
 
-                //酒精测试指令
+
                 SerialPortService serialPortService = new SerialPortBuilder()
                         .setTimeOut(100L)
-                        .setBaudrate(19200)
-                        .setDevicePath("/dev/ttyS1")
+                        .setBaudrate(9600)
+                        .setDevicePath("dev/ttyS4")
                         .createService();
-                //发送指令
-                byte[] receiveData = serialPortService.sendData("55AA0500010005");
-                if (receiveData != null) {
-                    Log.e("MainActivity：", ByteStringUtil.byteArrayToHexStr(receiveData));
-                }
+                serialPortService.isOutputLog(true);
+                //发送开门指令
+                byte[] receiveData = serialPortService.sendData("55AA0101010002");
+                Log.e("MainActivity：", ByteStringUtil.byteArrayToHexStr(receiveData));
 
 
             }

@@ -26,7 +26,6 @@ public class SerialPortService implements ISerialPortService {
      */
     private static int RE_READ_WAITE_TIME = 10;
 
-
     /**
      * 读取返回结果超时时间
      */
@@ -110,6 +109,11 @@ public class SerialPortService implements ISerialPortService {
         if (mSerialPort != null) {
             mSerialPort.closePort();
         }
+    }
+
+
+    public void isOutputLog(boolean debug) {
+        LogUtil.isDebug = debug;
     }
 
 

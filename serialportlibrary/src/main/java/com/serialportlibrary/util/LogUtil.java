@@ -7,7 +7,7 @@ import android.util.Log;
  * @date 2018/12/27  上午10:00
  */
 public class LogUtil {
-    private static boolean isDebug = false;
+    public static boolean isDebug = false;
 
     public static void e(String msg) {
         if (isDebug) {
