@@ -12,8 +12,6 @@ import com.serialportlibrary.service.impl.SerialPortBuilder;
 import com.serialportlibrary.service.impl.SerialPortService;
 import com.serialportlibrary.util.ByteStringUtil;
 
-import java.util.Arrays;
-
 public class MainActivity extends AppCompatActivity {
 
     TextView tv_hello;
@@ -27,9 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
         //获取所有串口名字
         String[] devices = new SerialPortFinder().getDevices();
-        //获取所用串口地址
+        //获取所有串口地址
         String[] devicesPath = new SerialPortFinder().getDevicesPaths();
-
 
         for (String path : devicesPath) {
             Log.e("MainActivity：", path);
@@ -37,10 +34,11 @@ public class MainActivity extends AppCompatActivity {
         for (String device : devices) {
             Log.e("MainActivity：", device);
         }
+
+
         tv_hello.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 SerialPortService serialPortService = new SerialPortBuilder()
                         .setTimeOut(100L)
@@ -51,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
                 //发送开门指令
                 byte[] receiveData = serialPortService.sendData("55AA0101010002");
                 Log.e("MainActivity：", ByteStringUtil.byteArrayToHexStr(receiveData));
-
+                //关闭串口
+                serialPortService.close();
 
             }
         });

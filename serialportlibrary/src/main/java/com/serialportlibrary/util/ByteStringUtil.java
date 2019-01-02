@@ -49,7 +49,10 @@ public class ByteStringUtil {
 
 
     public static void main(String[] args){
-        System.out.println(Arrays.toString(hexStrToByteArray("55AA0100010001")));
+        String hexStr="55AA0100010001";
+        //16进制字符串转成byte[]
+        byte[] bytes=hexStrToByteArray(hexStr);
+        System.out.println(Arrays.toString(bytes));
     }
 
 }

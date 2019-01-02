@@ -5,6 +5,7 @@ import android.os.SystemClock;
 import android.serialport.SerialPort;
 
 import com.serialportlibrary.service.ISerialPortService;
+import com.serialportlibrary.service.SendDataCallback;
 import com.serialportlibrary.util.ByteStringUtil;
 import com.serialportlibrary.util.LogUtil;
 
@@ -29,7 +30,7 @@ public class SerialPortService implements ISerialPortService {
     /**
      * 读取返回结果超时时间
      */
-    private Long mTimeOut = 100L;
+    private Long mTimeOut;
     /**
      * 串口地址
      */
@@ -63,17 +64,19 @@ public class SerialPortService implements ISerialPortService {
             try {
                 InputStream inputStream = mSerialPort.getInputStream();
                 OutputStream outputStream = mSerialPort.getOutputStream();
+                //判断有没有未读取的数据，清除数据
                 int available = inputStream.available();
                 byte[] returnData;
                 if (available > 0) {
                     returnData = new byte[available];
                     inputStream.read(returnData);
                 }
+                //发送数据
                 outputStream.write(data);
                 outputStream.flush();
                 LogUtil.e("发送数据-------" + Arrays.toString(data));
                 Long time = System.currentTimeMillis();
-                //暂存每次返回数据长度，不变的时候为读取完数据
+                //暂存每次返回数据长度，不变的时候为读取完整条数据
                 int receiveLeanth = 0;
                 while (System.currentTimeMillis() - time < mTimeOut) {
                     available = inputStream.available();
@@ -95,6 +98,11 @@ public class SerialPortService implements ISerialPortService {
     }
 
     @Override
+    public void sendData(byte[] data, SendDataCallback callback) {
+
+    }
+
+    @Override
     public byte[] sendData(String date) {
         try {
             return sendData(ByteStringUtil.hexStrToByteArray(date));
@@ -102,6 +110,11 @@ public class SerialPortService implements ISerialPortService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public void sendData(String data, SendDataCallback callback) {
+
     }
 
     @Override
