@@ -39,14 +39,14 @@ public class SerialPortBuilder {
         return this;
     }
 
-    public SerialPortService createService() {
-        SerialPortService serialPortService = null;
+    public SerialPortServiceImpl createService() {
+        SerialPortServiceImpl serialPortServiceImpl = null;
         try {
-            serialPortService = new SerialPortService(mDevicePath, mBaudrate, mTimeOut);
+            serialPortServiceImpl = new SerialPortServiceImpl(mDevicePath, mBaudrate, mTimeOut);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return serialPortService;
+        return serialPortServiceImpl;
     }
 
 }

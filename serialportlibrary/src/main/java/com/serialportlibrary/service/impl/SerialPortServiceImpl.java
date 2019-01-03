@@ -20,7 +20,7 @@ import java.util.Arrays;
  * @author HanPei
  * @date 2018/12/26  下午2:42
  */
-public class SerialPortService implements ISerialPortService {
+public class SerialPortServiceImpl implements ISerialPortService {
 
     /**
      * 尝试读取数据间隔时间
@@ -51,7 +51,7 @@ public class SerialPortService implements ISerialPortService {
      * @param timeOut    数据返回超时时间
      * @throws IOException 打开串口出错
      */
-    public SerialPortService(String devicePath, int baudrate, Long timeOut) throws IOException {
+    public SerialPortServiceImpl(String devicePath, int baudrate, Long timeOut) throws IOException {
         mTimeOut = timeOut;
         mDevicePath = devicePath;
         mBaudrate = baudrate;
@@ -60,7 +60,7 @@ public class SerialPortService implements ISerialPortService {
 
     @Override
     public byte[] sendData(byte[] data) {
-        synchronized (SerialPortService.this) {
+        synchronized (SerialPortServiceImpl.this) {
             try {
                 InputStream inputStream = mSerialPort.getInputStream();
                 OutputStream outputStream = mSerialPort.getOutputStream();
