@@ -23,6 +23,10 @@ import java.io.LineNumberReader;
 import java.util.Iterator;
 import java.util.Vector;
 
+/**
+ * @author HanPei
+ * @date 2018/12/26  下午3:39
+ */
 public class SerialPortFinder {
 
     private static final String TAG = "info";

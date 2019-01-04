@@ -12,6 +12,10 @@ import com.serialportlibrary.service.impl.SerialPortBuilder;
 import com.serialportlibrary.service.impl.SerialPortServiceImpl;
 import com.serialportlibrary.util.ByteStringUtil;
 
+/**
+ * @author HanPei
+ * @date 2018/12/26  下午3:39
+ */
 public class MainActivity extends AppCompatActivity {
 
     TextView tvHello;

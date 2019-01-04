@@ -9,7 +9,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * 串口通信，打开串口，读写数据
+ * @author HanPei
+ * @date 2018/12/26  下午3:39
  */
 public class SerialPort {
 

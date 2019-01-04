@@ -3,9 +3,9 @@ package com.serialportlibrary.util;
 import java.util.Arrays;
 
 /**
- * Created by Tyhj on 2017/3/10.
+ * @author HanPei
+ * @date 2018/12/26  下午3:39
  */
-
 public class ByteStringUtil {
 
     public static byte[] hexStrToByteArray(String str) {
@@ -38,7 +38,7 @@ public class ByteStringUtil {
     }
 
 
-    public static String StrToAddHexStr(String[] strings){
+    public static String strToAddHexStr(String[] strings){
         long all=Long.parseLong("0",16);
         for (int i=0;i<strings.length;i++){
             long one=Long.parseLong(strings[i],16);
