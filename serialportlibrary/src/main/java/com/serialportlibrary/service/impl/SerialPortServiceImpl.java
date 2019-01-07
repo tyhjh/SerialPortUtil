@@ -25,7 +25,7 @@ public class SerialPortServiceImpl implements ISerialPortService {
     /**
      * 尝试读取数据间隔时间
      */
-    private Long mReadWaiteTime=30L;
+    private Long mReadWaiteTime = 20L;
 
     /**
      * 读取返回结果超时时间
@@ -58,24 +58,23 @@ public class SerialPortServiceImpl implements ISerialPortService {
         byte[] returnData;
         //暂存每次返回数据长度，不变的时候为读取完整条数据
         int receiveLeanth = 0;
-        int available;
         while (true) {
-            available = inputStream.available();
-            if (available == receiveLeanth) {
-                returnData = new byte[available];
+            if (inputStream.available() == receiveLeanth) {
+                returnData = new byte[inputStream.available()];
                 inputStream.read(returnData);
                 return returnData;
             } else {
-                LogUtil.e("available长度为："+available);
-                receiveLeanth = available;
+                LogUtil.e("available长度为：" + inputStream.available());
+                receiveLeanth = inputStream.available();
+                SystemClock.sleep(mReadWaiteTime);
             }
-            SystemClock.sleep(mReadWaiteTime);
         }
     }
 
     @Override
     public byte[] sendData(byte[] data) {
         synchronized (SerialPortServiceImpl.this) {
+            Long time2 = System.currentTimeMillis();
             try {
                 InputStream inputStream = mSerialPort.getInputStream();
                 OutputStream outputStream = mSerialPort.getOutputStream();
@@ -91,6 +90,7 @@ public class SerialPortServiceImpl implements ISerialPortService {
                     if (inputStream.available() > 0) {
                         byte[] returnData = readFullData(inputStream);
                         LogUtil.e("接收--数据-------" + Arrays.toString(returnData));
+                        LogUtil.e("整条数据发送接收时间为：" + (System.currentTimeMillis() - time2));
                         return returnData;
                     }
                 }
