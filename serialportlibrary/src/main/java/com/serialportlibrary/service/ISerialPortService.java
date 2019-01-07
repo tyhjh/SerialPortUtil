@@ -14,15 +14,6 @@ public interface ISerialPortService {
      */
     byte[] sendData(byte[] data);
 
-
-    /**
-     * 非阻塞发送byteArray数据
-     *
-     * @param data
-     * @param callback
-     */
-    void sendData(byte[] data, SendDataCallback callback);
-
     /**
      * 阻塞发送十六进制的字符串数据
      *
@@ -33,12 +24,11 @@ public interface ISerialPortService {
 
 
     /**
-     * 非阻塞发送十六进制的字符串数据
+     * 监听接收串口数据
      *
-     * @param data
-     * @param callback
+     * @return 接收数据
      */
-    void sendData(String data, SendDataCallback callback);
+    byte[] receiveData();
 
 
     /**

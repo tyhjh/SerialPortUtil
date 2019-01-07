@@ -25,7 +25,7 @@ public class SerialPortServiceImpl implements ISerialPortService {
     /**
      * 尝试读取数据间隔时间
      */
-    private static int RE_READ_WAITE_TIME = 10;
+    private Long mReadWaiteTime;
 
     /**
      * 读取返回结果超时时间
@@ -43,19 +43,34 @@ public class SerialPortServiceImpl implements ISerialPortService {
 
     SerialPort mSerialPort;
 
+
     /**
-     * 初始化串口
+     * 确保读取一条数据完整的数据
      *
-     * @param devicePath 串口地址
-     * @param baudrate   波特率
-     * @param timeOut    数据返回超时时间
-     * @throws IOException 打开串口出错
+     * @param inputStream
+     * @return
+     * @throws IOException
      */
-    public SerialPortServiceImpl(String devicePath, int baudrate, Long timeOut) throws IOException {
-        mTimeOut = timeOut;
-        mDevicePath = devicePath;
-        mBaudrate = baudrate;
-        mSerialPort = new SerialPort(new File(mDevicePath), mBaudrate);
+    private byte[] readFullData(InputStream inputStream) throws IOException {
+        if (inputStream == null) {
+            return new byte[0];
+        }
+        byte[] returnData;
+        //暂存每次返回数据长度，不变的时候为读取完整条数据
+        int receiveLeanth = 0;
+        int available;
+        while (true) {
+            available = inputStream.available();
+            if (available == receiveLeanth) {
+                returnData = new byte[available];
+                inputStream.read(returnData);
+                return returnData;
+            } else {
+                //LogUtil.e("available长度为："+available);
+                receiveLeanth = available;
+            }
+            SystemClock.sleep(mReadWaiteTime);
+        }
     }
 
     @Override
@@ -64,43 +79,28 @@ public class SerialPortServiceImpl implements ISerialPortService {
             try {
                 InputStream inputStream = mSerialPort.getInputStream();
                 OutputStream outputStream = mSerialPort.getOutputStream();
-                //判断有没有未读取的数据，清除数据
-                int available = inputStream.available();
-                byte[] returnData;
-                if (available > 0) {
-                    returnData = new byte[available];
-                    inputStream.read(returnData);
-                }
+                //清除未读取的数据
+                readFullData(inputStream);
                 //发送数据
                 outputStream.write(data);
                 outputStream.flush();
                 LogUtil.e("发送数据-------" + Arrays.toString(data));
                 Long time = System.currentTimeMillis();
-                //暂存每次返回数据长度，不变的时候为读取完整条数据
-                int receiveLeanth = 0;
                 while (System.currentTimeMillis() - time < mTimeOut) {
-                    available = inputStream.available();
-                    if (available > 0 && available == receiveLeanth) {
-                        returnData = new byte[available];
-                        inputStream.read(returnData);
+                    //判断是否开始返回数据
+                    if (inputStream.available() > 0) {
+                        byte[] returnData = readFullData(inputStream);
                         LogUtil.e("接收--数据-------" + Arrays.toString(returnData));
                         return returnData;
-                    } else {
-                        receiveLeanth = available;
                     }
-                    SystemClock.sleep(RE_READ_WAITE_TIME);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return null;
+            return new byte[0];
         }
     }
 
-    @Override
-    public void sendData(byte[] data, SendDataCallback callback) {
-
-    }
 
     @Override
     public byte[] sendData(String date) {
@@ -112,10 +112,29 @@ public class SerialPortServiceImpl implements ISerialPortService {
         }
     }
 
-    @Override
-    public void sendData(String data, SendDataCallback callback) {
 
+    @Override
+    public byte[] receiveData() {
+        try {
+            InputStream inputStream = mSerialPort.getInputStream();
+            //清除未读取的数据
+            readFullData(inputStream);
+            Long time = System.currentTimeMillis();
+            while (System.currentTimeMillis() - time < mTimeOut) {
+                //判断是否开始返回数据
+                if (inputStream.available() > 0) {
+                    byte[] returnData = readFullData(inputStream);
+                    LogUtil.e("接收--数据-------" + Arrays.toString(returnData));
+                    return returnData;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new byte[0];
     }
+
 
     @Override
     public void close() {
@@ -129,5 +148,44 @@ public class SerialPortServiceImpl implements ISerialPortService {
         LogUtil.isDebug = debug;
     }
 
+    public void setReadWaiteTime(Long readWaiteTime) {
+        mReadWaiteTime = readWaiteTime;
+    }
 
+    public void setTimeOut(Long timeOut) {
+        mTimeOut = timeOut;
+    }
+
+    public void setDevicePath(String devicePath) {
+        mDevicePath = devicePath;
+    }
+
+    public void setBaudrate(int baudrate) {
+        mBaudrate = baudrate;
+    }
+
+    public void setSerialPort(SerialPort serialPort) {
+        mSerialPort = serialPort;
+    }
+
+
+    public Long getReadWaiteTime() {
+        return mReadWaiteTime;
+    }
+
+    public Long getTimeOut() {
+        return mTimeOut;
+    }
+
+    public String getDevicePath() {
+        return mDevicePath;
+    }
+
+    public int getBaudrate() {
+        return mBaudrate;
+    }
+
+    public SerialPort getSerialPort() {
+        return mSerialPort;
+    }
 }

@@ -1,5 +1,8 @@
 package com.serialportlibrary.service.impl;
 
+import android.serialport.SerialPort;
+
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -8,45 +11,40 @@ import java.io.IOException;
  */
 public class SerialPortBuilder {
 
-    /**
-     * 读取返回结果超时时间
-     */
-    private Long mTimeOut = 100L;
-    /**
-     * 串口地址
-     */
-    private String mDevicePath;
+    SerialPortServiceImpl mSerialPortServiceImpl;
 
-    /**
-     * 波特率
-     */
-    private int mBaudrate;
-
-    public SerialPortBuilder setBaudrate(int baudrate) {
-        mBaudrate = baudrate;
-        return this;
+    public SerialPortBuilder() {
+        mSerialPortServiceImpl = new SerialPortServiceImpl();
     }
-
-
-    public SerialPortBuilder setDevicePath(String devicePath) {
-        mDevicePath = devicePath;
-        return this;
-    }
-
 
     public SerialPortBuilder setTimeOut(Long timeOut) {
-        mTimeOut = timeOut;
+        mSerialPortServiceImpl.setTimeOut(timeOut);
+        return this;
+    }
+
+    public SerialPortBuilder setReadWaiteTime(Long readWaiteTime) {
+        mSerialPortServiceImpl.setReadWaiteTime(readWaiteTime);
+        return this;
+    }
+
+    public SerialPortBuilder setSerialPort(String devicePath, int baudrate) {
+        SerialPort serialPort = null;
+        try {
+            serialPort = new SerialPort(new File(devicePath), baudrate);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        mSerialPortServiceImpl.setSerialPort(serialPort);
+        return this;
+    }
+
+    public SerialPortBuilder isOutputLog(boolean isOutputLog) {
+        mSerialPortServiceImpl.isOutputLog(isOutputLog);
         return this;
     }
 
     public SerialPortServiceImpl createService() {
-        SerialPortServiceImpl serialPortServiceImpl = null;
-        try {
-            serialPortServiceImpl = new SerialPortServiceImpl(mDevicePath, mBaudrate, mTimeOut);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return serialPortServiceImpl;
+        return mSerialPortServiceImpl;
     }
 
 }

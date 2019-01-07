@@ -1,5 +1,6 @@
 package com.dhht.serialportutil;
 
+import android.serialport.SerialPort;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.serialportlibrary.util.ByteStringUtil;
 public class MainActivity extends AppCompatActivity {
 
     TextView tvHello;
+    SerialPortServiceImpl serialPortServiceImpl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,23 +41,35 @@ public class MainActivity extends AppCompatActivity {
             Log.e("MainActivity：", device);
         }
 
+        serialPortServiceImpl = new SerialPortBuilder()
+                .setTimeOut(100L)
+                .setReadWaiteTime(30L)
+                .setSerialPort("dev/ttyS4", 9600)
+                .isOutputLog(true)
+                .createService();
 
+        //关闭串口
+        //serialPortServiceImpl.close();
+
+        //多线程测试数据完整性
         tvHello.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                SerialPortServiceImpl serialPortServiceImpl = new SerialPortBuilder()
-                        .setTimeOut(100L)
-                        .setBaudrate(9600)
-                        .setDevicePath("dev/ttyS4")
-                        .createService();
-                serialPortServiceImpl.isOutputLog(true);
                 //发送开门指令
-                byte[] receiveData = serialPortServiceImpl.sendData("55AA0101010002");
-                Log.e("MainActivity：", ByteStringUtil.byteArrayToHexStr(receiveData));
-                //关闭串口
-                serialPortServiceImpl.close();
-
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (true) {
+                            byte[] receiveData = serialPortServiceImpl.sendData("55AA0101010002");
+                            String receiveDataStr = ByteStringUtil.byteArrayToHexStr(receiveData);
+                            if (receiveDataStr.length() != 16) {
+                                Log.e("fail：", receiveDataStr);
+                            } else {
+                                Log.e("ok：", receiveDataStr);
+                            }
+                        }
+                    }
+                }).start();
             }
         });
 
