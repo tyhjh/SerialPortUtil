@@ -25,7 +25,7 @@ public class SerialPortServiceImpl implements ISerialPortService {
     /**
      * 尝试读取数据间隔时间
      */
-    private Long mReadWaiteTime;
+    private Long mReadWaiteTime=30L;
 
     /**
      * 读取返回结果超时时间
@@ -66,7 +66,7 @@ public class SerialPortServiceImpl implements ISerialPortService {
                 inputStream.read(returnData);
                 return returnData;
             } else {
-                //LogUtil.e("available长度为："+available);
+                LogUtil.e("available长度为："+available);
                 receiveLeanth = available;
             }
             SystemClock.sleep(mReadWaiteTime);

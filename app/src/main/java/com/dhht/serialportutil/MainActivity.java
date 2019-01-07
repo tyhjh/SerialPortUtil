@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         serialPortServiceImpl = new SerialPortBuilder()
                 .setTimeOut(100L)
-                .setReadWaiteTime(30L)
+                .setReadWaiteTime(20L)
                 .setSerialPort("dev/ttyS4", 9600)
                 .isOutputLog(true)
                 .createService();
