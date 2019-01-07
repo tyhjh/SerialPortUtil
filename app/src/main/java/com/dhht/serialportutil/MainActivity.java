@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         serialPortServiceImpl = new SerialPortBuilder()
                 .setTimeOut(100L)
                 .setReadWaiteTime(20L)
-                .setSerialPort("dev/ttyS4", 9600)
+                .setSerialPort("/dev/ttyS1", 19200)
                 .isOutputLog(true)
                 .createService();
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         while (true) {
-                            byte[] receiveData = serialPortServiceImpl.sendData("55AA0101010002");
+                            byte[] receiveData = serialPortServiceImpl.receiveData();
                             String receiveDataStr = ByteStringUtil.byteArrayToHexStr(receiveData);
                             if (receiveDataStr.length() != 16) {
                                 Log.e("fail：", receiveDataStr);

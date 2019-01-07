@@ -115,22 +115,23 @@ public class SerialPortServiceImpl implements ISerialPortService {
 
     @Override
     public byte[] receiveData() {
-        try {
-            InputStream inputStream = mSerialPort.getInputStream();
-            //清除未读取的数据
-            readFullData(inputStream);
-            Long time = System.currentTimeMillis();
-            while (System.currentTimeMillis() - time < mTimeOut) {
-                //判断是否开始返回数据
-                if (inputStream.available() > 0) {
-                    byte[] returnData = readFullData(inputStream);
-                    LogUtil.e("接收--数据-------" + Arrays.toString(returnData));
-                    return returnData;
+        synchronized (SerialPortServiceImpl.this) {
+            try {
+                InputStream inputStream = mSerialPort.getInputStream();
+                //清除未读取的数据
+                readFullData(inputStream);
+                Long time = System.currentTimeMillis();
+                while (System.currentTimeMillis() - time < mTimeOut) {
+                    //判断是否开始返回数据
+                    if (inputStream.available() > 0) {
+                        byte[] returnData = readFullData(inputStream);
+                        LogUtil.e("接收--数据-------" + Arrays.toString(returnData));
+                        return returnData;
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return new byte[0];
     }
